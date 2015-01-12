@@ -1,11 +1,8 @@
 package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.cp.bean.WxCpMessage;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Test;
-
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.cp.bean.WxCpMessage;
 
 import com.google.inject.Inject;
 
@@ -14,8 +11,6 @@ import com.google.inject.Inject;
  * @author Daniel Qian
  *
  */
-@Test(groups="customMessageAPI", dependsOnGroups = "baseAPI")
-@Guice(modules = ApiTestModule.class)
 public class WxCpMessageAPITest {
 
   @Inject

@@ -1,11 +1,9 @@
 package me.chanjar.weixin.cp.api;
 
-import me.chanjar.weixin.common.util.StringUtils;
-import org.testng.Assert;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Test;
-
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.util.StringUtils;
+
+import org.junit.Assert;
 
 import com.google.inject.Inject;
 
@@ -14,8 +12,6 @@ import com.google.inject.Inject;
  * @author Daniel Qian
  *
  */
-@Test(groups = "baseAPI")
-@Guice(modules = ApiTestModule.class)
 public class WxCpBaseAPITest {
 
   @Inject

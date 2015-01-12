@@ -1,14 +1,15 @@
 package me.chanjar.weixin.cp.bean;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import me.chanjar.weixin.common.api.WxConsts;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import me.chanjar.weixin.cp.bean.WxCpMessage.WxArticle;
 
-@Test
 public class WxCpMessageTest {
 
+    @Test
   public void testTextReply() {
     WxCpMessage reply = new WxCpMessage();
     reply.setToUser("OPENID");

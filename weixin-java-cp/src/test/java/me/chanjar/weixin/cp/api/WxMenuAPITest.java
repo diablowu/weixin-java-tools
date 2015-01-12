@@ -4,44 +4,35 @@ import javax.xml.bind.JAXBException;
 
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxMenu;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Test;
-
-import com.google.inject.Inject;
-
 import me.chanjar.weixin.common.bean.WxMenu.WxMenuButton;
 import me.chanjar.weixin.common.exception.WxErrorException;
+
+import org.junit.Assert;
+
+import com.google.inject.Inject;
 
 /**
  * 测试菜单
  * @author Daniel Qian
  *
  */
-@Test(groups="menuAPI", dependsOnGroups="baseAPI")
-@Guice(modules = ApiTestModule.class)
 public class WxMenuAPITest {
 
   @Inject
   protected WxCpServiceImpl wxService;
   
-  @Test(dataProvider = "menu")
   public void testCreateMenu(WxMenu wxMenu) throws WxErrorException {
     wxService.menuCreate(wxMenu);
   }
   
-  @Test(dependsOnMethods = { "testCreateMenu"})
   public void testGetMenu() throws WxErrorException {
     Assert.assertNotNull(wxService.menuGet());
   }
   
-  @Test(dependsOnMethods = { "testGetMenu"})
   public void testDeleteMenu() throws WxErrorException {
     wxService.menuDelete();
   }
   
-  @DataProvider(name="menu")
   public Object[][] getMenu() throws JAXBException {
     WxMenu menu = new WxMenu();
     WxMenuButton button1 = new WxMenuButton();

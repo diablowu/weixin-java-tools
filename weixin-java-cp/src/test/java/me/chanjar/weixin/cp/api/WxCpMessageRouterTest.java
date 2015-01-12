@@ -5,19 +5,17 @@ import java.util.Map;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 import me.chanjar.weixin.cp.bean.WxCpXmlOutMessage;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 测试消息路由器
  * @author Daniel Qian
  *
  */
-@Test
 public class WxCpMessageRouterTest {
   
-  @Test(enabled = false)
   public void prepare(boolean async, StringBuffer sb, WxCpMessageRouter router) {
     router
       .rule()
@@ -44,7 +42,6 @@ public class WxCpMessageRouterTest {
     ;
   }
   
-  @Test(dataProvider="messages-1")
   public void testSync(WxCpXmlMessage message, String expected) {
     StringBuffer sb = new StringBuffer();
     WxCpMessageRouter router = new WxCpMessageRouter(null);
@@ -53,7 +50,6 @@ public class WxCpMessageRouterTest {
     Assert.assertEquals(sb.toString(), expected);
   }
   
-  @Test(dataProvider="messages-1")
   public void testAsync(WxCpXmlMessage message, String expected) throws InterruptedException {
     StringBuffer sb = new StringBuffer();
     WxCpMessageRouter router = new WxCpMessageRouter(null);
@@ -89,7 +85,6 @@ public class WxCpMessageRouterTest {
     
     Thread.sleep(1000l * 2);
   }
-  @DataProvider(name="messages-1")
   public Object[][] messages2() {
     WxCpXmlMessage message1 = new WxCpXmlMessage();
     message1.setMsgType(WxConsts.XML_MSG_TEXT);

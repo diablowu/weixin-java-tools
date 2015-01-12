@@ -7,12 +7,9 @@ import java.util.List;
 
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Test;
-
 import me.chanjar.weixin.common.exception.WxErrorException;
+
+import org.junit.Assert;
 
 import com.google.inject.Inject;
 
@@ -22,8 +19,6 @@ import com.google.inject.Inject;
  *
  */
 //@Test(groups="mediaAPI", dependsOnGroups="baseAPI")
-@Test
-@Guice(modules = ApiTestModule.class)
 public class WxCpMediaAPITest {
 
   @Inject
@@ -31,7 +26,6 @@ public class WxCpMediaAPITest {
 
   private List<String> media_ids = new ArrayList<String>();
   
-  @Test(dataProvider="uploadMedia")
   public void testUploadMedia(String mediaType, String fileType, String fileName) throws WxErrorException, IOException {
     InputStream inputStream = ClassLoader.getSystemResourceAsStream(fileName);
     WxMediaUploadResult res = wxService.mediaUpload(mediaType, fileType, inputStream);
@@ -47,7 +41,6 @@ public class WxCpMediaAPITest {
     }
   }
   
-  @DataProvider
   public Object[][] uploadMedia() {
     return new Object[][] {
         new Object[] { WxConsts.MEDIA_IMAGE, WxConsts.FILE_JPG, "mm.jpeg" },
@@ -57,12 +50,10 @@ public class WxCpMediaAPITest {
     };
   }
   
-  @Test(dependsOnMethods = { "testUploadMedia" }, dataProvider="downloadMedia")
   public void testDownloadMedia(String media_id) throws WxErrorException {
     wxService.mediaDownload(media_id);
   }
   
-  @DataProvider
   public Object[][] downloadMedia() {
     Object[][] params = new Object[this.media_ids.size()][];
     for (int i = 0; i < this.media_ids.size(); i++) {

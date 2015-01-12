@@ -1,9 +1,7 @@
 package me.chanjar.weixin.cp.bean;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
 
-@Test
 public class WxCpXmlOutVoiceMessageTest {
 
   public void test() {

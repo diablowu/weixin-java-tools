@@ -13,10 +13,11 @@
  */
 package me.chanjar.weixin.common.util.crypto;
 
-import org.apache.commons.codec.binary.Base64;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -24,11 +25,11 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Random;
+
+import org.apache.commons.codec.binary.Base64;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 public class WxCryptUtil {
 
@@ -83,7 +84,7 @@ public class WxCryptUtil {
     String encryptedXml = encrypt(genRandomStr(), plainText);
 
     // 生成安全签名
-    String timeStamp = timeStamp = Long.toString(System.currentTimeMillis() / 1000l);
+    String timeStamp = Long.toString(System.currentTimeMillis() / 1000l);
     String nonce = genRandomStr();
 
     try {

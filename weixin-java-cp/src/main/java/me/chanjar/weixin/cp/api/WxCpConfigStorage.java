@@ -1,5 +1,6 @@
 package me.chanjar.weixin.cp.api;
 
+import me.chanjar.weixin.common.bean.JSApiTicket;
 import me.chanjar.weixin.common.bean.WxAccessToken;
 
 /**
@@ -13,7 +14,15 @@ public interface WxCpConfigStorage {
   
   public void updateAccessToken(String accessToken, int expiresIn);
   
+  public void updateJSApiTicket(JSApiTicket ticket);
+  
+  public void updateJSApiTicket(String ticket, int expiresIn);
+  
   public String getAccessToken();
+  
+  public String getJSApiTicket();
+  
+  public int getJSApiTicketExpiresIn();
   
   public String getCorpId();
   
@@ -29,12 +38,5 @@ public interface WxCpConfigStorage {
 
   public String getOauth2redirectUri();
 
-  public String getHttp_proxy_host();
-
-  public int getHttp_proxy_port();
-
-  public String getHttp_proxy_username();
-
-  public String getHttp_proxy_password();
 
 }

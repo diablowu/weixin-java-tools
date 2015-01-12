@@ -2,12 +2,11 @@ package me.chanjar.weixin.cp.api;
 
 import java.util.List;
 
-import me.chanjar.weixin.cp.bean.WxCpDepart;
-import org.testng.Assert;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Test;
-
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.cp.bean.WxCpDepart;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.google.inject.Inject;
 
@@ -16,8 +15,6 @@ import com.google.inject.Inject;
  *
  * @author Daniel Qian
  */
-@Test(groups = "departAPI", dependsOnGroups = "baseAPI")
-@Guice(modules = ApiTestModule.class)
 public class WxCpDepartAPITest {
 
   @Inject
@@ -33,7 +30,6 @@ public class WxCpDepartAPITest {
     Integer departId = wxCpService.departCreate(depart);
   }
 
-  @Test(dependsOnMethods = "testDepartCreate")
   public void testDepartGet() throws WxErrorException {
     System.out.println("=================获取部门");
     List<WxCpDepart> departList = wxCpService.departGet();
@@ -46,14 +42,12 @@ public class WxCpDepartAPITest {
     }
   }
 
-  @Test(dependsOnMethods = { "testDepartGet", "testDepartCreate" })
   public void testDepartUpdate() throws WxErrorException {
     System.out.println("=================更新部门");
     depart.setName("子部门改名" + System.currentTimeMillis());
     wxCpService.departUpdate(depart);
   }
 
-  @Test(dependsOnMethods = "testDepartUpdate")
   public void testDepartDelete() throws WxErrorException {
     System.out.println("=================删除部门");
     System.out.println(depart.getId() + ":" + depart.getName());
