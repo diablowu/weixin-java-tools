@@ -1,20 +1,17 @@
 package me.chanjar.weixin.common.bean;
 
 import me.chanjar.weixin.common.bean.WxMenu.WxMenuButton;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
-@Test
+import org.junit.Assert;
+import org.junit.Test;
+
 public class WxMenuTest {
 
-  @Test(dataProvider="wxReturnMenu")
   public void testFromJson(String json) {
     WxMenu menu = WxMenu.fromJson(json);
     Assert.assertEquals(menu.getButtons().size(), 3);
   }
   
-  @Test(dataProvider="wxPushMenu")
   public void testToJson(String json) {
     WxMenu menu = new WxMenu();
     WxMenuButton button1 = new WxMenuButton();
@@ -56,7 +53,6 @@ public class WxMenuTest {
     Assert.assertEquals(menu.toJson(), json);
   }
   
-  @DataProvider
   public Object[][] wxReturnMenu() {
     Object[][]  res = menuJson();
     String json = "{ \"menu\" : " + res[0][0] + " }";
@@ -65,7 +61,6 @@ public class WxMenuTest {
     };
   }
   
-  @DataProvider(name="wxPushMenu")
   public Object[][] menuJson() {
     String json = 
         "{"

@@ -1,9 +1,8 @@
 package me.chanjar.weixin.common.bean;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
-@Test
 public class WxAccessTokenTest {
 
   public void testFromJson() {

@@ -1,10 +1,10 @@
 package me.chanjar.weixin.common.bean;
 
 import me.chanjar.weixin.common.bean.result.WxError;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
-@Test
+import org.junit.Assert;
+import org.junit.Test;
+
 public class WxErrorTest {
 
   public void testFromJson() {

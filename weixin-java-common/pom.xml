@@ -6,7 +6,8 @@
     <parent>
         <groupId>me.chanjar</groupId>
         <artifactId>weixin-java-parent</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>weixin-java-common</artifactId>
@@ -19,17 +20,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -41,7 +33,5 @@
         </dependency>
     </dependencies>
 
-    <build>
-    </build>
 
 </project>

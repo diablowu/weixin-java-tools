@@ -6,7 +6,8 @@
     <parent>
         <groupId>me.chanjar</groupId>
         <artifactId>weixin-java-parent</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>weixin-java-mp</artifactId>
     <name>WeiXin Java Tools :: MP</name>
@@ -23,16 +24,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -43,19 +36,5 @@
             <artifactId>jetty-servlet</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
