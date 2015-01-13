@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -29,6 +30,7 @@ public class WxCryptUtilTest {
   String replyMsg2 = "<xml><ToUserName><![CDATA[oia2Tj我是中文jewbmiOUlr6X-1crbLOvLw]]></ToUserName><FromUserName><![CDATA[gh_7f083739789a]]></FromUserName><CreateTime>1407743423</CreateTime><MsgType><![CDATA[video]]></MsgType><Video><MediaId><![CDATA[eYJ1MbwPRJtOvIEabaxHs7TX2D-HV71s79GUxqdUkjm6Gs2Ed1KF3ulAOA9H1xG0]]></MediaId><Title><![CDATA[testCallBackReplyVideo]]></Title><Description><![CDATA[testCallBackReplyVideo]]></Description></Video></xml>";
   String afterAesEncrypt2 = "jn1L23DB+6ELqJ+6bruv23M2GmYfkv0xBh2h+XTBOKVKcgDFHle6gqcZ1cZrk3e1qjPQ1F4RsLWzQRG9udbKWesxlkupqcEcW7ZQweImX9+wLMa0GaUzpkycA8+IamDBxn5loLgZpnS7fVAbExOkK5DYHBmv5tptA9tklE/fTIILHR8HLXa5nQvFb3tYPKAlHF3rtTeayNf0QuM+UW/wM9enGIDIJHF7CLHiDNAYxr+r+OrJCmPQyTy8cVWlu9iSvOHPT/77bZqJucQHQ04sq7KZI27OcqpQNSto2OdHCoTccjggX5Z9Mma0nMJBU+jLKJ38YB1fBIz+vBzsYjrTmFQ44YfeEuZ+xRTQwr92vhA9OxchWVINGC50qE/6lmkwWTwGX9wtQpsJKhP+oS7rvTY8+VdzETdfakjkwQ5/Xka042OlUb1/slTwo4RscuQ+RdxSGvDahxAJ6+EAjLt9d8igHngxIbf6YyqqROxuxqIeIch3CssH/LqRs+iAcILvApYZckqmA7FNERspKA5f8GoJ9sv8xmGvZ9Yrf57cExWtnX8aCMMaBropU/1k+hKP5LVdzbWCG0hGwx/dQudYR/eXp3P0XxjlFiy+9DMlaFExWUZQDajPkdPrEeOwofJb";
 
+  @Test
   public void testNormal() throws ParserConfigurationException, SAXException, IOException {
     WxCryptUtil pc = new WxCryptUtil(token, encodingAesKey, appId);
     String encryptedXml = pc.encrypt(replyMsg);
@@ -54,14 +56,23 @@ public class WxCryptUtilTest {
 //    assertEquals(plainMessage, replyMsg);
   }
 
+  @Test
   public void testAesEncrypt() {
-    WxCryptUtil pc = new WxCryptUtil(token, encodingAesKey, appId);
-//    assertEquals(pc.encrypt(randomStr, replyMsg), afterAesEncrypt);
+    WxCryptUtil pc = new WxCryptUtil("dbcdef", encodingAesKey, "2");
+    String s =  pc.encrypt("adfasdfasdfasdfasdfasdfasdfasdfasdfasd","qqqqqqqqqqqqqqqq");
+    
+    
+    
+    System.out.println(s);
   }
-
-  public void testAesEncrypt2() {
-    WxCryptUtil pc = new WxCryptUtil(token, encodingAesKey, appId);
-//    assertEquals(pc.encrypt(randomStr, replyMsg2), afterAesEncrypt2);
+  @Test
+  public void testDecrypt(){
+          String e = "w2lTfdB6mMEY6RLMNdrSIezl+M9quiv0fHEVYyK8lF3zZALGY8NkGYa+8TmtWkRGnygfRVXUjxv453mTn5rhGg==";
+          WxCryptUtil pc = new WxCryptUtil("dbcdef", encodingAesKey, "2");
+          String p = pc.decrypt(e);
+          System.out.println(p);
+      
+      
   }
 
   public void testValidateSignatureError() throws ParserConfigurationException, SAXException,

@@ -124,7 +124,7 @@ public class WxCryptUtil {
 
     try {
       // 设置加密模式为AES的CBC模式
-      Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+      Cipher cipher = Cipher.getInstance("AES/CBC/NOPADDING");
       SecretKeySpec keySpec = new SecretKeySpec(aesKey, "AES");
       IvParameterSpec iv = new IvParameterSpec(aesKey, 0, 16);
       cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
@@ -238,6 +238,9 @@ public class WxCryptUtil {
     orderBytes[0] = (byte) (number >> 24 & 0xFF);
     return orderBytes;
   }
+  
+  
+  
 
   /**
    * 4个字节的网络字节序bytes数组还原成一个数字
@@ -302,3 +305,4 @@ public class WxCryptUtil {
   }
 
 }
+

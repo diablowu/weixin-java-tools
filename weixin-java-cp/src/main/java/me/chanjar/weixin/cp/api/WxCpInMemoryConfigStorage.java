@@ -10,6 +10,8 @@ import me.chanjar.weixin.common.bean.WxAccessToken;
  * 
  */
 public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
+    
+    
 
     protected String corpId;
     protected String corpSecret;
@@ -142,5 +144,6 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
         this.jsApiTicket = ticket;
         this.jsApiTicketExpiresIn = expiresIn;
     }
-
+    
+    
 }
