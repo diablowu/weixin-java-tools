@@ -1,22 +1,15 @@
 package me.chanjar.weixin.cp.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.chanjar.weixin.cp.bean.WxCpTag;
-import me.chanjar.weixin.cp.bean.WxCpUser;
 
 import org.junit.Assert;
-import org.junit.Test;
-
-import com.google.inject.Inject;
 
 public class WxCpTagAPITest {
 
-  @Inject
   protected WxCpServiceImpl wxService;
 
-  @Inject
   protected WxCpConfigStorage configStorage;
 
   protected String tagId;
@@ -35,22 +28,22 @@ public class WxCpTagAPITest {
     Assert.assertNotEquals(tags.size(), 0);
   }
 
-  public void testTagAddUsers() throws Exception {
-    List<String> userIds = new ArrayList<String>();
-    userIds.add(((ApiTestModule.WxXmlCpInMemoryConfigStorage)configStorage).getUserId());
-    wxService.tagAddUsers(tagId, userIds);
-  }
-
-  public void testTagGetUsers() throws Exception {
-    List<WxCpUser> users = wxService.tagGetUsers(tagId);
-    Assert.assertNotEquals(users.size(), 0);
-  }
-
-  public void testTagRemoveUsers() throws Exception {
-    List<String> userIds = new ArrayList<String>();
-    userIds.add(((ApiTestModule.WxXmlCpInMemoryConfigStorage)configStorage).getUserId());
-    wxService.tagRemoveUsers(tagId, userIds);
-  }
+//  public void testTagAddUsers() throws Exception {
+//    List<String> userIds = new ArrayList<String>();
+//    userIds.add(((ApiTestModule.WxXmlCpInMemoryConfigStorage)configStorage).getUserId());
+//    wxService.tagAddUsers(tagId, userIds);
+//  }
+//
+//  public void testTagGetUsers() throws Exception {
+//    List<WxCpUser> users = wxService.tagGetUsers(tagId);
+//    Assert.assertNotEquals(users.size(), 0);
+//  }
+//
+//  public void testTagRemoveUsers() throws Exception {
+//    List<String> userIds = new ArrayList<String>();
+//    userIds.add(((ApiTestModule.WxXmlCpInMemoryConfigStorage)configStorage).getUserId());
+//    wxService.tagRemoveUsers(tagId, userIds);
+//  }
   public void testTagDelete() throws Exception {
     wxService.tagDelete(tagId);
   }

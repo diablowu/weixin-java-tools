@@ -7,8 +7,16 @@ public class WxAccessToken {
   private String accessToken;
   
   private int expiresIn = -1;
+  
+  public WxAccessToken(){} 
 
-  public String getAccessToken() {
+  public WxAccessToken(String accessToken, int expiresIn) {
+    super();
+    this.accessToken = accessToken;
+    this.expiresIn = expiresIn;
+}
+
+public String getAccessToken() {
     return accessToken;
   }
 

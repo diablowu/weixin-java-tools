@@ -9,8 +9,6 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 
 import org.junit.Assert;
 
-import com.google.inject.Inject;
-
 /**
  * 测试菜单
  * @author Daniel Qian
@@ -18,7 +16,6 @@ import com.google.inject.Inject;
  */
 public class WxMenuAPITest {
 
-  @Inject
   protected WxCpServiceImpl wxService;
   
   public void testCreateMenu(WxMenu wxMenu) throws WxErrorException {

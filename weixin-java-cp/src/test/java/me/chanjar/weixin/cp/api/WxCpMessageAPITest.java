@@ -2,37 +2,37 @@ package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.cp.WxAPITestBase;
 import me.chanjar.weixin.cp.bean.WxCpMessage;
 
-import com.google.inject.Inject;
+import org.junit.Test;
 
 /***
  * 测试发送消息
+ * 
  * @author Daniel Qian
  *
  */
-public class WxCpMessageAPITest {
+public class WxCpMessageAPITest extends WxAPITestBase {
 
-  @Inject
-  protected WxCpServiceImpl wxService;
+    @Test
+    public void testSendCustomMessage() throws WxErrorException {
+        WxCpMessage message1 = new WxCpMessage();
+        message1.setAgentId(storage.getAgentId());
+        message1.setMsgType(WxConsts.CUSTOM_MSG_TEXT);
+        message1.setToUser("wubo");
+        message1.setContent("欢迎欢迎，热烈欢迎\n换行测试\n超链接:<a href=\"http://www.baidu.com\">Hello World</a>");
+        wxCpService.messageSend(message1);
 
-  public void testSendCustomMessage() throws WxErrorException {
-    ApiTestModule.WxXmlCpInMemoryConfigStorage configStorage = (ApiTestModule.WxXmlCpInMemoryConfigStorage) wxService.wxCpConfigStorage;
-    WxCpMessage message1 = new WxCpMessage();
-    message1.setAgentId(configStorage.getAgentId());
-    message1.setMsgType(WxConsts.CUSTOM_MSG_TEXT);
-    message1.setToUser(configStorage.getUserId());
-    message1.setContent("欢迎欢迎，热烈欢迎\n换行测试\n超链接:<a href=\"http://www.baidu.com\">Hello World</a>");
-    wxService.messageSend(message1);
+        WxCpMessage message2 = WxCpMessage
+                .TEXT()
+                .agentId(storage.getAgentId())
+                .toUser("wubo")
+                .content(
+                        "欢迎欢迎，热烈欢迎\n换行测试\n超链接:<a href=\"http://www.baidu.com\">Hello World</a>")
+                .build();
+        wxCpService.messageSend(message2);
 
-    WxCpMessage message2 = WxCpMessage
-        .TEXT()
-        .agentId(configStorage.getAgentId())
-        .toUser(configStorage.getUserId())
-        .content("欢迎欢迎，热烈欢迎\n换行测试\n超链接:<a href=\"http://www.baidu.com\">Hello World</a>")
-        .build();
-    wxService.messageSend(message2);
-
-  }
+    }
 
 }

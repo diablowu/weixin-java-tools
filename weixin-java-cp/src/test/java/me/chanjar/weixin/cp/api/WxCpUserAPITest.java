@@ -8,8 +8,6 @@ import me.chanjar.weixin.cp.bean.WxCpUser;
 
 import org.junit.Assert;
 
-import com.google.inject.Inject;
-
 /**
  * 测试用户接口
  *
@@ -17,7 +15,6 @@ import com.google.inject.Inject;
  */
 public class WxCpUserAPITest {
 
-  @Inject
   protected WxCpServiceImpl wxCpService;
 
   protected WxCpDepart depart;

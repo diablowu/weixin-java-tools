@@ -20,7 +20,7 @@ public class WxCpReloadMemConfigStorage extends WxCpInMemoryConfigStorage {
     private static WxCpReloadMemConfigStorage fromXml() {
         try {
             InputStream is = WxCpReloadMemConfigStorage.class
-                    .getResourceAsStream("mp.config.xml");
+                    .getResourceAsStream("/mp.config.xml");
             Unmarshaller um = JAXBContext.newInstance(
                     WxCpReloadMemConfigStorage.class).createUnmarshaller();
 

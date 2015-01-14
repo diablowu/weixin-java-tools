@@ -1,65 +1,52 @@
 package me.chanjar.weixin.cp.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.cp.WxAPITestBase;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Test;
 
-import com.google.inject.Inject;
+public class WxCpMediaAPITest extends WxAPITestBase {
 
-/**
- * 测试多媒体文件上传下载
- * @author Daniel Qian
- *
- */
-//@Test(groups="mediaAPI", dependsOnGroups="baseAPI")
-public class WxCpMediaAPITest {
 
-  @Inject
-  protected WxCpServiceImpl wxService;
+    @Test
+    public void testUploadMedia() throws WxErrorException, IOException {
+        InputStream inputStream = ClassLoader
+                .getSystemResourceAsStream("./mm.jpeg");
+        WxMediaUploadResult res = wxCpService.mediaUpload(WxConsts.MEDIA_IMAGE,
+                WxConsts.FILE_JPG, inputStream);
+        Assert.assertNotNull(res.getType());
+        Assert.assertNotNull(res.getCreatedAt());
+        System.out.println(res.getMediaId());
 
-  private List<String> media_ids = new ArrayList<String>();
-  
-  public void testUploadMedia(String mediaType, String fileType, String fileName) throws WxErrorException, IOException {
-    InputStream inputStream = ClassLoader.getSystemResourceAsStream(fileName);
-    WxMediaUploadResult res = wxService.mediaUpload(mediaType, fileType, inputStream);
-    Assert.assertNotNull(res.getType());
-    Assert.assertNotNull(res.getCreatedAt());
-    Assert.assertTrue(res.getMediaId() != null || res.getThumbMediaId() != null);
-    
-    if (res.getMediaId() != null) {
-      media_ids.add(res.getMediaId());
     }
-    if (res.getThumbMediaId() != null) {
-      media_ids.add(res.getThumbMediaId());
+
+    public Object[][] uploadMedia() {
+        return new Object[][] {
+                new Object[] { WxConsts.MEDIA_IMAGE, WxConsts.FILE_JPG,
+                        "mm.jpeg" },
+                new Object[] { WxConsts.MEDIA_VOICE, WxConsts.FILE_MP3,
+                        "mm.mp3" },
+                new Object[] { WxConsts.MEDIA_VIDEO, WxConsts.FILE_MP4,
+                        "mm.mp4" },
+                new Object[] { WxConsts.MEDIA_FILE, WxConsts.FILE_JPG,
+                        "mm.jpeg" } };
     }
-  }
-  
-  public Object[][] uploadMedia() {
-    return new Object[][] {
-        new Object[] { WxConsts.MEDIA_IMAGE, WxConsts.FILE_JPG, "mm.jpeg" },
-        new Object[] { WxConsts.MEDIA_VOICE, WxConsts.FILE_MP3, "mm.mp3" },
-        new Object[] { WxConsts.MEDIA_VIDEO, WxConsts.FILE_MP4, "mm.mp4" },
-        new Object[] { WxConsts.MEDIA_FILE, WxConsts.FILE_JPG, "mm.jpeg" }
-    };
-  }
-  
-  public void testDownloadMedia(String media_id) throws WxErrorException {
-    wxService.mediaDownload(media_id);
-  }
-  
-  public Object[][] downloadMedia() {
-    Object[][] params = new Object[this.media_ids.size()][];
-    for (int i = 0; i < this.media_ids.size(); i++) {
-      params[i] = new Object[] { this.media_ids.get(i) };
+
+    @Test
+    public void testDownloadMedia() throws Exception {
+        File tmpFile = wxCpService
+                .mediaDownload("1BgJTUOOAgLk7j63lTcTTSZz1LIOwEYQcO5KMxnKfyYhG9ID2LkDTGLp0TpU8eYoZ");
+        FileUtils.copyFile(tmpFile, new File("c:/1.jgp"));
+
     }
-    return params;
-  }
-  
+
+
 }
