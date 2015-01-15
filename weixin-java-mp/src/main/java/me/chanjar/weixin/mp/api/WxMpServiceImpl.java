@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import me.chanjar.weixin.common.bean.JSApiTicket;
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.bean.WxMenu;
 import me.chanjar.weixin.common.bean.result.WxError;
@@ -70,7 +71,6 @@ public class WxMpServiceImpl implements WxMpService {
 
     protected CloseableHttpClient httpClient;
 
-    protected HttpHost httpProxy;
 
     public boolean checkSignature(String timestamp, String nonce,
             String signature) {
@@ -79,6 +79,44 @@ public class WxMpServiceImpl implements WxMpService {
                     .equals(signature);
         } catch (Exception e) {
             return false;
+        }
+    }
+    
+    @Override
+    public void jsApiTicketRefresh() throws WxErrorException {
+        if (!GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.getAndSet(true)) {
+            try {
+                String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="
+                        + wxMpConfigStorage.getAccessToken()
+                        + "&type=jsapi";
+                try {
+                    HttpGet httpGet = new HttpGet(url);
+                    CloseableHttpClient httpclient = getHttpclient();
+                    CloseableHttpResponse response = httpclient.execute(httpGet);
+                    String resultContent = new BasicResponseHandler().handleResponse(response);
+                    WxError error = WxError.fromJson(resultContent);
+                    if (error.getErrorCode() != 0) {
+                        throw new WxErrorException(error);
+                    }
+                    JSApiTicket ticket = JSApiTicket.fromJson(resultContent);
+//                    wxMpConfigStorage.
+                } catch (ClientProtocolException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } finally {
+                GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.set(false);
+            }
+        } else {
+            // 每隔100ms检查一下是否刷新完毕了
+            while (GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.get()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                }
+            }
+            // 刷新完毕了，就没他什么事儿了
         }
     }
 
@@ -92,11 +130,6 @@ public class WxMpServiceImpl implements WxMpService {
                         + wxMpConfigStorage.getSecret();
                 try {
                     HttpGet httpGet = new HttpGet(url);
-                    if (httpProxy != null) {
-                        RequestConfig config = RequestConfig.custom()
-                                .setProxy(httpProxy).build();
-                        httpGet.setConfig(config);
-                    }
                     CloseableHttpClient httpclient = getHttpclient();
                     CloseableHttpResponse response = httpclient
                             .execute(httpGet);

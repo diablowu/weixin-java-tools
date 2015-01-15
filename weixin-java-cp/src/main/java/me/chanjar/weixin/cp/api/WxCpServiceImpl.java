@@ -35,6 +35,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -45,6 +47,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 public class WxCpServiceImpl implements WxCpService {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(WxCpServiceImpl.class);
 
     /**
      * 全局的是否正在刷新Access Token的flag true: 正在刷新 false: 没有刷新
@@ -70,6 +74,12 @@ public class WxCpServiceImpl implements WxCpService {
         String url = "https://qyapi.weixin.qq.com/cgi-bin/user/authsucc?userid="+ userId;
         execute(new SimpleGetRequestExecutor(), url, null);
     }
+    
+    @Override
+    public void jsApiTicketRefresh() throws WxErrorException {
+        // TODO Auto-generated method stub
+        
+    }
 
     public void accessTokenRefresh() throws WxErrorException {
         if (!GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.getAndSet(true)) {
@@ -94,8 +104,10 @@ public class WxCpServiceImpl implements WxCpService {
                             accessToken.getAccessToken(),
                             accessToken.getExpiresIn());
                 } catch (ClientProtocolException e) {
+                    LOGGER.error("客户端通信异常",e);
                     throw new RuntimeException(e);
                 } catch (IOException e) {
+                    LOGGER.error("客户端通信异常",e);
                     throw new RuntimeException(e);
                 }
             } finally {
@@ -107,9 +119,9 @@ public class WxCpServiceImpl implements WxCpService {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
+                    LOGGER.error("Sleep 中断异常",e);
                 }
             }
-            // 刷新完毕了，就没他什么事儿了
         }
     }
 
@@ -138,6 +150,7 @@ public class WxCpServiceImpl implements WxCpService {
                     null);
             return WxMenu.fromJson(resultContent);
         } catch (WxErrorException e) {
+            LOGGER.error("执行menuGet异常",e);
             // 46003 不存在的菜单数据
             if (e.getError().getErrorCode() == 46003) {
                 return null;
@@ -370,8 +383,10 @@ public class WxCpServiceImpl implements WxCpService {
             return new String[] { GsonHelper.getString(jo, "UserId"),
                     GsonHelper.getString(jo, "DeviceId") };
         } catch (ClientProtocolException e) {
+            LOGGER.error("客户端通信异常",e);
             throw new RuntimeException(e);
         } catch (IOException e) {
+            LOGGER.error("客户端通信异常",e);
             throw new RuntimeException(e);
         }
     }

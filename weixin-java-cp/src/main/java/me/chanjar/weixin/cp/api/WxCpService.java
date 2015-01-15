@@ -54,6 +54,13 @@ public interface WxCpService {
    * @throws me.chanjar.weixin.common.exception.WxErrorException
    */
   public void accessTokenRefresh() throws WxErrorException;
+  
+  
+  /**
+   * 刷新jsticket
+   * @throws WxErrorException
+   */
+  public void jsApiTicketRefresh() throws WxErrorException;
 
   /**
    * <pre>

@@ -1,5 +1,8 @@
 package me.chanjar.weixin.cp.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import me.chanjar.weixin.common.bean.JSApiTicket;
 import me.chanjar.weixin.common.bean.WxAccessToken;
 
@@ -11,7 +14,7 @@ import me.chanjar.weixin.common.bean.WxAccessToken;
  */
 public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
     
-    
+    protected static final Logger LOGGER = LoggerFactory.getLogger(WxCpInMemoryConfigStorage.class);
 
     protected String corpId;
     protected String corpSecret;

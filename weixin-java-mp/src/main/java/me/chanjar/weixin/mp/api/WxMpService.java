@@ -44,6 +44,13 @@ public interface WxMpService {
    */
   public void accessTokenRefresh() throws WxErrorException;
   
+  
+  /**
+   * https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi
+   * @throws WxErrorException
+   */
+  public void jsApiTicketRefresh() throws WxErrorException;
+  
   /**
    * <pre>
    * 上传多媒体文件

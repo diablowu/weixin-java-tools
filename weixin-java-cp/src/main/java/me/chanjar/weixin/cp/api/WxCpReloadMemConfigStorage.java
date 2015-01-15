@@ -15,12 +15,14 @@ import org.xml.sax.InputSource;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WxCpReloadMemConfigStorage extends WxCpInMemoryConfigStorage {
 
+    
     private static final WxCpConfigStorage _CONFIG = fromXml();
 
     private static WxCpReloadMemConfigStorage fromXml() {
+        String configPath = "/mp.config.xml";
+        LOGGER.debug("从配置文件{} 加载MP信息",configPath);
         try {
-            InputStream is = WxCpReloadMemConfigStorage.class
-                    .getResourceAsStream("/mp.config.xml");
+            InputStream is = WxCpReloadMemConfigStorage.class.getResourceAsStream(configPath);
             Unmarshaller um = JAXBContext.newInstance(
                     WxCpReloadMemConfigStorage.class).createUnmarshaller();
 
@@ -28,7 +30,7 @@ public class WxCpReloadMemConfigStorage extends WxCpInMemoryConfigStorage {
             inputSource.setEncoding("utf-8");
             return (WxCpReloadMemConfigStorage) um.unmarshal(inputSource);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            LOGGER.error("解析配置文件{} 错误",configPath,e);
             return null;
         }
     }

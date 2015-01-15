@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.chanjar.weixin.common.bean.result.WxError;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.util.AccessTokenHolder;
 import me.chanjar.weixin.common.util.http.RequestExecutor;
 
 import org.apache.http.client.ClientProtocolException;
@@ -16,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
  * @Date 2015年1月13日 下午3:42:24
  */
 public class WxCpNAServiceImpl extends WxCpServiceImpl {
+    
 
     @Override
     public void accessTokenRefresh() throws WxErrorException {
@@ -33,7 +35,7 @@ public class WxCpNAServiceImpl extends WxCpServiceImpl {
      */
     @Override
     public <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data) throws WxErrorException {
-        String accessToken = wxCpConfigStorage.getAccessToken();
+        String accessToken = AccessTokenHolder.get().getAccessToken();
 
         String uriWithAccessToken = uri;
         uriWithAccessToken += uri.indexOf('?') == -1 ? "?access_token="
