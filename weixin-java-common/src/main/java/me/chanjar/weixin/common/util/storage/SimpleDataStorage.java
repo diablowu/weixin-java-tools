@@ -1,5 +1,11 @@
 package me.chanjar.weixin.common.util.storage;
 
+/**
+ * 用于存储一些简单的数据的方式，这里用于存储accesstoken和jsapiticket
+ * 
+ * @author Diablo Wu
+ * @date 下午9:52:00
+ */
 public class SimpleDataStorage {
 
     private Data data = null;

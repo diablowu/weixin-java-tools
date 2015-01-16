@@ -16,8 +16,18 @@ import me.chanjar.weixin.common.util.storage.StorageStrategy;
 import me.chanjar.weixin.cp.api.WxCpConfig;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * 基于文件的存储设备，第一行为数据，第二行为失效时间戳
+ * 
+ * @author Diablo Wu
+ * @date 下午9:50:38
+ */
 public class FileSimpleDataStrategy implements StorageStrategy {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSimpleDataStrategy.class);
     
     private String filePath;
     private WxCpConfig config;
@@ -30,54 +40,67 @@ public class FileSimpleDataStrategy implements StorageStrategy {
 
     @Override
     public SimpleDataStorage.Data exec(boolean force) {
-        long cts = System.currentTimeMillis();
-        long ts = cts + 7200000;
+        long current = System.currentTimeMillis();
+        long newExpiredTs = current + 7200000;
         Data data = new Data();
-        File tk = new File(this.filePath);
-        if(force){
+        File storageFile = new File(this.filePath);
+        if(force){//十分忽略过期策略直接刷新
             try {
-                data.value = writeAndUpdate(ts,tk);
-                data.expired = ts;
+                
+                data.value = writeAndUpdate(newExpiredTs,storageFile);
+                data.expired = newExpiredTs;
+                LOGGER.info("本地文件存储[{}]强制更新成功", this.filePath);
                 return data;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("更新本地存储文件[{}]时出错",this.filePath,e);
+                return null;
             }
         }
         
         try{
-            if (!tk.exists()) {
-                tk.createNewFile();
+            if (!storageFile.exists()) {
+                storageFile.createNewFile();
             }
-            FileInputStream fis = new FileInputStream(tk);
+            FileInputStream fis = new FileInputStream(storageFile);
             List<String> lines = IOUtils.readLines(fis);
             fis.close();
+            
             if (lines != null && !lines.isEmpty()
                     && !StringUtils.isEmpty(lines.get(0).trim())
                     && !StringUtils.isEmpty(lines.get(1).trim())) {
-                String _t = lines.get(0).trim();
-                Long expired = Long.parseLong(lines.get(1).trim());
-                if (cts >= expired) {// 如果存储过期
-                    data.value = writeAndUpdate(ts,tk);
-                    data.expired = ts;
-                    System.out.println("获取新的value使用");
+                
+                String _token = lines.get(0).trim();
+                long _expired = Long.parseLong(lines.get(1).trim());
+                
+                if (current >= _expired) {// 如果存储过期
+                    data.value = writeAndUpdate(newExpiredTs, storageFile);
+                    data.expired = newExpiredTs;
+                    LOGGER.info("当前时间超过本地文件存储[{}]中过期时间，直接更新成功", this.filePath);
                 } else {
-                    System.out.println("从file中读取value使用");
                     // 直接使用
-                    data.expired = ts;
-                    data.value = _t;
+                    data.expired = _expired;
+                    data.value = _token;
+                    LOGGER.info("[{}]本地文件存储读取成功", this.filePath);
                 }
             } else {
-                data.value = writeAndUpdate(ts,tk);
-                data.expired = ts;
-                System.out.println("获取新的value使用");
+                data.value = writeAndUpdate(newExpiredTs, storageFile);
+                data.expired = newExpiredTs;
+                LOGGER.info("[{}]本地文件存储读取失败，直接更新成功", this.filePath);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch(IOException e){
+            LOGGER.error("[{}]本地文件存储写入时出错",this.filePath,e);
         }
         return data;
     }
     
-    private String writeAndUpdate(long expired, File tk) throws IOException{
+    /**
+     * 请求更新数据并返回
+     * @param expired 新的过期时间戳
+     * @param storageFile 存储文件
+     * @return
+     * @throws IOException
+     */
+    private String writeAndUpdate(long expired, File storageFile) throws IOException{
         String token = AccessTokenHolder.requestToken(
                 config.getCorpId(), config.getCorpSecret(),
                 AccessTokenHolder.TokenType.CP);
@@ -85,7 +108,7 @@ public class FileSimpleDataStrategy implements StorageStrategy {
         List<String> _newlines = new ArrayList<String>(2);
         _newlines.add(token);
         _newlines.add(String.valueOf(expired));
-        FileOutputStream fos = new FileOutputStream(tk);
+        FileOutputStream fos = new FileOutputStream(storageFile);
         IOUtils.writeLines(_newlines, "\n", fos);
         fos.close();
         return token;

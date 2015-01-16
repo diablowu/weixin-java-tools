@@ -1,12 +1,13 @@
 package me.chanjar.weixin.cp.api;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,14 +30,22 @@ public class WxCpConfig {
     @XmlElement(name = "agent",type = AgentConfig.class)
     private List<AgentConfig> agents = new ArrayList<AgentConfig>();
     
+    private Map<String, AgentConfig> configs = new HashMap<String, AgentConfig>();
     
     public WxCpConfig(){}
     
     public WxCpConfig(String path){
-        WxCpConfig _c = _load(path);
+        WxCpConfig _c = load(path);
         this.corpId = _c.corpId;
         this.corpSecret = _c.corpSecret;
         this.agents = _c.agents;
+        for (AgentConfig agentConfig : _c.agents) {
+            configs.put(agentConfig.getAgentId(), agentConfig);
+        }
+    }
+    
+    public AgentConfig getAgentConfig(String agentId){
+        return this.configs.get(agentId);
     }
 
     public List<AgentConfig> getAgents() {
@@ -64,34 +73,35 @@ public class WxCpConfig {
     }
     
     
-    private static WxCpConfig _load(String path){
+    private WxCpConfig load(String path){
         try {
             Unmarshaller um = JAXBContext.newInstance(WxCpConfig.class).createUnmarshaller();
             FileInputStream fis = new FileInputStream(path);
             InputSource inputSource = new InputSource(fis);
             inputSource.setEncoding("utf-8");
-            WxCpConfig c = (WxCpConfig) um.unmarshal(inputSource);
+            WxCpConfig cpconfig = (WxCpConfig) um.unmarshal(inputSource);
             fis.close();
-            for(AgentConfig ac : c.getAgents()){
-                ac.setCorp(c);
+            for(AgentConfig ac : cpconfig.getAgents()){
+                ac.setCorp(cpconfig);
             }
-            return c;
+            return cpconfig;
         } catch (Exception e) {
             throw new RuntimeException("从xml加载配置异常", e);
         }
     }
     
-    public static WxCpConfig loadXml(String path){
-        return _load(path);
-    }
     
-    public static void main(String[] args) throws Exception {
-        WxCpConfig c = WxCpConfig.loadXml("c:/config.xml");
-        System.out.println(c.corpId);
-        for (AgentConfig config : c.getAgents()) {
-            System.out.println(config.getAgentId() + " : " +config.getCorp().getCorpSecret()) ;
-            
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("corpid : "+this.corpId+"\n").append("corpsec : "+this.corpSecret+"\n");
+        for (Entry<String, AgentConfig> ee : this.configs.entrySet()) {
+            sb.append(ee.getKey()+":"+ee.getValue().toString()).append("\n");
         }
+        return sb.toString();
     }
+
+    
 
 }

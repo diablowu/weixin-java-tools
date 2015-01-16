@@ -46,5 +46,10 @@ public class AgentConfig {
     public void setCorp(WxCpConfig corp) {
         this.corp = corp;
     }
+    
+    @Override
+    public String toString() {
+        return "token:"+this.token+",aeskey:"+this.aesKey;
+    }
 
 }

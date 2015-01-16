@@ -24,7 +24,7 @@ public class TestInitServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        WxCpConfig config = WxCpConfig.loadXml("");
+        WxCpConfig config = new WxCpConfig("/tmp/config.xml");
         String filePath = System.getProperty("user.home")+ "/.access_token";
         StorageStrategy ss = new FileSimpleDataStrategy(filePath,config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);
@@ -35,7 +35,7 @@ public class TestInitServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig c) throws ServletException {
-        WxCpConfig config = WxCpConfig.loadXml("");
+        WxCpConfig config = new WxCpConfig("/tmp/config.xml");
         String filePath = System.getProperty("user.home")+ "/.access_token";
         StorageStrategy ss = new FileSimpleDataStrategy(filePath,config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);

@@ -17,15 +17,16 @@ public class WxAPITestBase {
 
     @Before
     public void init() {
-//        storage = WxCpReloadMemConfigStorage.get();
-        WxCpConfig config = WxCpConfig.loadXml("");
+        config = new WxCpConfig("/tmp/config.xml");
+        
+        System.out.println(config.toString());
+        
         String filePath = System.getProperty("user.home") + "/.access_token";
         StorageStrategy ss = new FileSimpleDataStrategy(filePath, config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);
         sds.loadData(false);
         AccessTokenHolder.load(sds.getData(), 7200);
         
-        config = new WxCpConfig();
 
         wxCpService = new WxCpSpringServiceImpl();
         wxCpService.setWxCpConfig(config);

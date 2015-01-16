@@ -50,7 +50,6 @@ public class AccessTokenHolder {
             CloseableHttpClient httpclient = HttpClients.createDefault();
             CloseableHttpResponse response = httpclient.execute(httpGet);
             String resultContent = new BasicResponseHandler().handleResponse(response);
-            System.out.println(resultContent);
             WxError error = WxError.fromJson(resultContent);
             if (error.getErrorCode() != 0) {
                 throw new WxErrorException(error);
