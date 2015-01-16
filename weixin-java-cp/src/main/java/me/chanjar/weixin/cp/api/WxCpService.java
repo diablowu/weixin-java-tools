@@ -9,8 +9,6 @@ import me.chanjar.weixin.common.bean.WxMenu;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.util.http.RequestExecutor;
 import me.chanjar.weixin.cp.bean.*;
-import me.chanjar.weixin.cp.bean.WxCpDepart;
-import me.chanjar.weixin.cp.bean.WxCpUser;
 import me.chanjar.weixin.common.exception.WxErrorException;
 
 /**
@@ -53,6 +51,7 @@ public interface WxCpService {
    *
    * @throws me.chanjar.weixin.common.exception.WxErrorException
    */
+  @Deprecated
   public void accessTokenRefresh() throws WxErrorException;
   
   
@@ -60,6 +59,7 @@ public interface WxCpService {
    * 刷新jsticket
    * @throws WxErrorException
    */
+  @Deprecated
   public void jsApiTicketRefresh() throws WxErrorException;
 
   /**
@@ -122,7 +122,7 @@ public interface WxCpService {
    * @param menu
    * @throws WxErrorException
    */
-  public void menuCreate(WxMenu menu) throws WxErrorException;
+  public void menuCreate(WxMenu menu, String agentId) throws WxErrorException;
 
   /**
    * <pre>
@@ -132,7 +132,7 @@ public interface WxCpService {
    *
    * @throws WxErrorException
    */
-  public void menuDelete() throws WxErrorException;
+  public void menuDelete(String agentId) throws WxErrorException;
 
   /**
    * <pre>
@@ -143,7 +143,7 @@ public interface WxCpService {
    * @return
    * @throws WxErrorException
    */
-  public WxMenu menuGet() throws WxErrorException;
+  public WxMenu menuGet(String agentId) throws WxErrorException;
 
   /**
    * <pre>
@@ -300,7 +300,7 @@ public interface WxCpService {
    * @param code
    * @return [userid, deviceid]
    */
-  public String[] oauth2getUserInfo(String code) throws WxErrorException;
+  public String[] oauth2getUserInfo(String code, String agentId) throws WxErrorException;
 
   /**
    * 移除标签成员
@@ -343,11 +343,9 @@ public interface WxCpService {
    * @throws WxErrorException
    */
   public <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data) throws WxErrorException;
+  
+  public void setWxCpConfig(WxCpConfig wxCpConfig);
+  
+  public WxCpConfig getWxCpConfig();
 
-  /**
-   * 注入 {@link WxCpConfigStorage} 的实现
-   *
-   * @param wxConfigProvider
-   */
-  public void setWxCpConfigStorage(WxCpConfigStorage wxConfigProvider);
 }

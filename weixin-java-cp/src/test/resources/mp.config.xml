@@ -1,9 +1,23 @@
-<xml>
+<config>
     <corpId>wx8464f7ea09a20903</corpId>
     <corpSecret>ONkuLWeenCqSoY05pV9H5_7wnlZuRMYSabRaZkz4MEidk8LqFpVXNq9tBjGUvwBx</corpSecret>
-    <agentId>1</agentId>
-    <token>ybdO8XJU1wqsQqKMPU38EQiCgTJPwli</token>
-    <aesKey>OJrNyUvkr9cAhvCKrMnFITsEYyS49TwQpROjFlFNcse</aesKey>
-    <accessToken></accessToken>
-    <expiresIn></expiresIn>
-</xml>
+    <agents>
+		<agent>
+		    <agentId>1</agentId>
+		    <token>ybdO8XJU1wqsQqKMPU38EQiCgTJPwli</token>
+		    <aesKey>OJrNyUvkr9cAhvCKrMnFITsEYyS49TwQpROjFlFNcse</aesKey>
+		</agent>    
+		
+		<agent>
+		    <agentId>2</agentId>
+		    <token>ybdO8XJU1wqsQqKMPU38EQiCgTJPwli</token>
+		    <aesKey>OJrNyUvkr9cAhvCKrMnFITsEYyS49TwQpROjFlFNcse</aesKey>
+		</agent> 
+		
+		<agent>
+		    <agentId>3</agentId>
+		    <token>ybdO8XJU1wqsQqKMPU38EQiCgTJPwli</token>
+		    <aesKey>OJrNyUvkr9cAhvCKrMnFITsEYyS49TwQpROjFlFNcse</aesKey>
+		</agent> 				
+    </agents>
+</config>

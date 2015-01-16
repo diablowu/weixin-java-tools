@@ -6,14 +6,13 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.TimeUnit;
 
-import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.bean.WxMenu;
 import me.chanjar.weixin.common.bean.result.WxError;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.common.util.StringUtils;
+import me.chanjar.weixin.common.util.AccessTokenHolder;
 import me.chanjar.weixin.common.util.crypto.SHA1;
 import me.chanjar.weixin.common.util.fs.FileUtils;
 import me.chanjar.weixin.common.util.http.MediaDownloadRequestExecutor;
@@ -30,9 +29,6 @@ import me.chanjar.weixin.cp.bean.WxCpUser;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
@@ -46,25 +42,25 @@ import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-public class WxCpServiceImpl implements WxCpService {
+
+/**
+ * 支持spring配置的方式
+ * @author Diablo Wu
+ * @Date 2015年1月13日 下午3:42:24
+ */
+public class WxCpSpringServiceImpl implements WxCpService {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(WxCpServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WxCpSpringServiceImpl.class);
 
-    /**
-     * 全局的是否正在刷新Access Token的flag true: 正在刷新 false: 没有刷新
-     */
-    protected static final AtomicBoolean GLOBAL_ACCESS_TOKEN_REFRESH_FLAG = new AtomicBoolean(false);
-
-    protected WxCpConfigStorage wxCpConfigStorage;
+    private WxCpConfig wxCpConfig;
 
     protected final ThreadLocal<Integer> retryTimes = new ThreadLocal<Integer>();
 
-    protected CloseableHttpClient httpClient;
 
     public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data) {
         try {
-            return SHA1.gen(wxCpConfigStorage.getToken(), timestamp, nonce,
-                    data).equals(msgSignature);
+            String accessToken = AccessTokenHolder.get().getAccessToken();
+            return SHA1.gen(accessToken, timestamp, nonce, data).equals(msgSignature);
         } catch (Exception e) {
             return false;
         }
@@ -77,52 +73,11 @@ public class WxCpServiceImpl implements WxCpService {
     
     @Override
     public void jsApiTicketRefresh() throws WxErrorException {
-        // TODO Auto-generated method stub
-        
+        //ignore
     }
 
     public void accessTokenRefresh() throws WxErrorException {
-        if (!GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.getAndSet(true)) {
-            try {
-                String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?"
-                        + "&corpid=" + wxCpConfigStorage.getCorpId()
-                        + "&corpsecret=" + wxCpConfigStorage.getCorpSecret();
-                try {
-                    HttpGet httpGet = new HttpGet(url);
-                    CloseableHttpClient httpclient = getHttpclient();
-                    CloseableHttpResponse response = httpclient
-                            .execute(httpGet);
-                    String resultContent = new BasicResponseHandler()
-                            .handleResponse(response);
-                    WxError error = WxError.fromJson(resultContent);
-                    if (error.getErrorCode() != 0) {
-                        throw new WxErrorException(error);
-                    }
-                    WxAccessToken accessToken = WxAccessToken
-                            .fromJson(resultContent);
-                    wxCpConfigStorage.updateAccessToken(
-                            accessToken.getAccessToken(),
-                            accessToken.getExpiresIn());
-                } catch (ClientProtocolException e) {
-                    LOGGER.error("客户端通信异常",e);
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    LOGGER.error("客户端通信异常",e);
-                    throw new RuntimeException(e);
-                }
-            } finally {
-                GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.set(false);
-            }
-        } else {
-            // 每隔100ms检查一下是否刷新完毕了
-            while (GLOBAL_ACCESS_TOKEN_REFRESH_FLAG.get()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    LOGGER.error("Sleep 中断异常",e);
-                }
-            }
-        }
+       //ignore
     }
 
     public void messageSend(WxCpMessage message) throws WxErrorException {
@@ -130,24 +85,20 @@ public class WxCpServiceImpl implements WxCpService {
         execute(new SimplePostRequestExecutor(), url, message.toJson());
     }
 
-    public void menuCreate(WxMenu menu) throws WxErrorException {
-        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/create?agentid="
-                + wxCpConfigStorage.getAgentId();
+    public void menuCreate(WxMenu menu, String agentId) throws WxErrorException {
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/create?agentid=" + agentId;
         execute(new SimplePostRequestExecutor(), url, menu.toJson());
     }
 
-    public void menuDelete() throws WxErrorException {
-        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/delete?agentid="
-                + wxCpConfigStorage.getAgentId();
+    public void menuDelete(String agentId) throws WxErrorException {
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/delete?agentid=" + agentId;
         execute(new SimpleGetRequestExecutor(), url, null);
     }
 
-    public WxMenu menuGet() throws WxErrorException {
-        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/get?agentid="
-                + wxCpConfigStorage.getAgentId();
+    public WxMenu menuGet(String agentId) throws WxErrorException {
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/menu/get?agentid=" + agentId;
         try {
-            String resultContent = execute(new SimpleGetRequestExecutor(), url,
-                    null);
+            String resultContent = execute(new SimpleGetRequestExecutor(), url, null);
             return WxMenu.fromJson(resultContent);
         } catch (WxErrorException e) {
             LOGGER.error("执行menuGet异常",e);
@@ -353,11 +304,11 @@ public class WxCpServiceImpl implements WxCpService {
 
     @Override
     public String oauth2buildAuthorizationUrl(String state) {
+        String redirectURI = "";
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
-        url += "appid=" + wxCpConfigStorage.getCorpId();
+        url += "appid=" + wxCpConfig.getCorpId();
         url += "&redirect_uri="
-                + URIUtil.encodeURIComponent(wxCpConfigStorage
-                        .getOauth2redirectUri());
+                + URIUtil.encodeURIComponent(redirectURI);
         url += "&response_type=code";
         url += "&scope=snsapi_base";
         if (state != null) {
@@ -368,11 +319,12 @@ public class WxCpServiceImpl implements WxCpService {
     }
 
     @Override
-    public String[] oauth2getUserInfo(String code) throws WxErrorException {
+    public String[] oauth2getUserInfo(String code, String agentId) throws WxErrorException {
+        String accessToken = AccessTokenHolder.get().getAccessToken();
         String url = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?";
-        url += "access_token=" + wxCpConfigStorage.getAccessToken();
+        url += "access_token=" + accessToken;
         url += "&code=" + code;
-        url += "&agendid=" + wxCpConfigStorage.getAgentId();
+        url += "&agendid=" +agentId;
 
         try {
             RequestExecutor<String, String> executor = new SimpleGetRequestExecutor();
@@ -399,8 +351,14 @@ public class WxCpServiceImpl implements WxCpService {
         return execute(new SimplePostRequestExecutor(), url, postData);
     }
 
+   
+
+    protected CloseableHttpClient getHttpclient() {
+        return HttpClients.createDefault();
+    }
+
     /**
-     * 向微信端发送请求，在这里执行的策略是当发生access_token过期时才去刷新，然后重新执行请求，而不是全局定时请求
+     * 去除自动刷新token
      * 
      * @param executor
      * @param uri
@@ -408,12 +366,9 @@ public class WxCpServiceImpl implements WxCpService {
      * @return
      * @throws WxErrorException
      */
-    public <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data)
-            throws WxErrorException {
-        if (StringUtils.isBlank(wxCpConfigStorage.getAccessToken())) {
-            accessTokenRefresh();
-        }
-        String accessToken = wxCpConfigStorage.getAccessToken();
+    @Override
+    public <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data) throws WxErrorException {
+        String accessToken = AccessTokenHolder.get().getAccessToken();
 
         String uriWithAccessToken = uri;
         uriWithAccessToken += uri.indexOf('?') == -1 ? "?access_token="
@@ -425,12 +380,17 @@ public class WxCpServiceImpl implements WxCpService {
             WxError error = e.getError();
             /*
              * 发生以下情况时尝试刷新access_token 40001
-             * 获取access_token时AppSecret错误，或者access_token无效 42001 access_token超时
+             * have a rest and try it.
              */
             if (error.getErrorCode() == 42001 || error.getErrorCode() == 40001) {
-                accessTokenRefresh();
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
                 return execute(executor, uri, data);
             }
+            
             /**
              * -1 系统繁忙, 1000ms后重试
              */
@@ -463,13 +423,14 @@ public class WxCpServiceImpl implements WxCpService {
         }
     }
 
-    protected CloseableHttpClient getHttpclient() {
-        return httpClient;
+    public void setWxCpConfig(WxCpConfig wxCpConfig) {
+        this.wxCpConfig = wxCpConfig;
     }
-
-    public void setWxCpConfigStorage(WxCpConfigStorage wxConfigProvider) {
-        this.wxCpConfigStorage = wxConfigProvider;
-        httpClient = HttpClients.createDefault();
+    
+    @Override
+    public WxCpConfig getWxCpConfig() {
+        return this.wxCpConfig;
+        
     }
 
 }

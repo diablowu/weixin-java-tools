@@ -1,17 +1,21 @@
 package me.chanjar.weixin.cp.bean;
 
-import me.chanjar.weixin.common.util.xml.AdapterCDATA;
-import me.chanjar.weixin.cp.api.WxCpConfigStorage;
-import me.chanjar.weixin.cp.bean.outxmlbuilder.*;
-import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
-import me.chanjar.weixin.cp.util.xml.XmlTransformer;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import me.chanjar.weixin.common.util.xml.AdapterCDATA;
+import me.chanjar.weixin.cp.api.AgentConfig;
+import me.chanjar.weixin.cp.bean.outxmlbuilder.ImageBuilder;
+import me.chanjar.weixin.cp.bean.outxmlbuilder.NewsBuilder;
+import me.chanjar.weixin.cp.bean.outxmlbuilder.TextBuilder;
+import me.chanjar.weixin.cp.bean.outxmlbuilder.VideoBuilder;
+import me.chanjar.weixin.cp.bean.outxmlbuilder.VoiceBuilder;
+import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
+import me.chanjar.weixin.cp.util.xml.XmlTransformer;
 
 @XmlRootElement(name = "xml")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -76,9 +80,9 @@ public class WxCpXmlOutMessage {
    * 转换成加密的xml格式
    * @return
    */
-  public String toEncryptedXml(WxCpConfigStorage wxCpConfigStorage) {
+  public String toEncryptedXml(AgentConfig config) {
     String plainXml = toXml();
-    WxCpCryptUtil pc = new WxCpCryptUtil(wxCpConfigStorage);
+    WxCpCryptUtil pc = new WxCpCryptUtil(config);
     return pc.encrypt(plainXml);
   }
 

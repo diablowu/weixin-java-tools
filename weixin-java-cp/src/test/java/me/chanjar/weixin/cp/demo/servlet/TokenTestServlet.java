@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.cp.api.WxCpNAServiceImpl;
-import me.chanjar.weixin.cp.api.WxCpReloadMemConfigStorage;
 import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.api.WxCpSpringServiceImpl;
 import me.chanjar.weixin.cp.bean.WxCpDepart;
 
 public class TokenTestServlet extends HttpServlet {
@@ -27,8 +26,8 @@ public class TokenTestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
-        WxCpService wxCpService = new WxCpNAServiceImpl();
-        wxCpService.setWxCpConfigStorage(WxCpReloadMemConfigStorage.get());
+        WxCpService wxCpService = new WxCpSpringServiceImpl();
+        wxCpService.setWxCpConfig(null);
         
         try {
             resp.setContentType("text/plain;charset=utf-8");

@@ -8,36 +8,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-
 import me.chanjar.weixin.common.util.AccessTokenHolder;
 import me.chanjar.weixin.common.util.StringUtils;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage.Data;
 import me.chanjar.weixin.common.util.storage.StorageStrategy;
-import me.chanjar.weixin.cp.api.WxCpConfigStorage;
-import me.chanjar.weixin.cp.api.WxCpReloadMemConfigStorage;
+import me.chanjar.weixin.cp.api.WxCpConfig;
+
+import org.apache.commons.io.IOUtils;
 
 public class FileSimpleDataStrategy implements StorageStrategy {
     
     private String filePath;
+    private WxCpConfig config;
     
-    public FileSimpleDataStrategy(String filePath){
+    public FileSimpleDataStrategy(String filePath, WxCpConfig config){
         this.filePath = filePath;
+        this.config = config;
     }
         
 
     @Override
     public SimpleDataStorage.Data exec(boolean force) {
-        WxCpConfigStorage storage = WxCpReloadMemConfigStorage.get();
-        
         long cts = System.currentTimeMillis();
         long ts = cts + 7200000;
         Data data = new Data();
         File tk = new File(this.filePath);
         if(force){
             try {
-                data.value = writeAndUpdate(storage,ts,tk);
+                data.value = writeAndUpdate(ts,tk);
                 data.expired = ts;
                 return data;
             } catch (IOException e) {
@@ -58,7 +57,7 @@ public class FileSimpleDataStrategy implements StorageStrategy {
                 String _t = lines.get(0).trim();
                 Long expired = Long.parseLong(lines.get(1).trim());
                 if (cts >= expired) {// 如果存储过期
-                    data.value = writeAndUpdate(storage,ts,tk);
+                    data.value = writeAndUpdate(ts,tk);
                     data.expired = ts;
                     System.out.println("获取新的value使用");
                 } else {
@@ -68,7 +67,7 @@ public class FileSimpleDataStrategy implements StorageStrategy {
                     data.value = _t;
                 }
             } else {
-                data.value = writeAndUpdate(storage,ts,tk);
+                data.value = writeAndUpdate(ts,tk);
                 data.expired = ts;
                 System.out.println("获取新的value使用");
             }
@@ -78,9 +77,9 @@ public class FileSimpleDataStrategy implements StorageStrategy {
         return data;
     }
     
-    private String writeAndUpdate(final WxCpConfigStorage storage,long expired, File tk) throws IOException{
+    private String writeAndUpdate(long expired, File tk) throws IOException{
         String token = AccessTokenHolder.requestToken(
-                storage.getCorpId(), storage.getCorpSecret(),
+                config.getCorpId(), config.getCorpSecret(),
                 AccessTokenHolder.TokenType.CP);
         // 更新存储文件
         List<String> _newlines = new ArrayList<String>(2);
