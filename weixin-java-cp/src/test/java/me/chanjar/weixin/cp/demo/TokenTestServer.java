@@ -1,7 +1,6 @@
 package me.chanjar.weixin.cp.demo;
 
 import me.chanjar.weixin.cp.demo.servlet.TestInitServlet;
-import me.chanjar.weixin.cp.demo.servlet.TokenTestServlet;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
@@ -19,8 +18,6 @@ public class TokenTestServer {
         ServletHandler sh = new ServletHandler();
         sh.addServletWithMapping(new ServletHolder(new TestInitServlet()), "/ff");
         
-        sh.addServletWithMapping(new ServletHolder(new TokenTestServlet()), "/tt");
-        server.setHandler(sh);
         server.start();
         server.join();
     }
