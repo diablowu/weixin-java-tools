@@ -1,8 +1,10 @@
 package me.chanjar.weixin.common.util;
 
 import me.chanjar.weixin.common.bean.JSApiTicket;
+import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.bean.result.WxError;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.util.AccessTokenHolder.TokenType;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,9 +33,16 @@ public class JSApiTicketHolder {
     }
     
     
-    public synchronized static final String requestToken(){
-        String token = AccessTokenHolder.get().getAccessToken();
-        String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+token+"&type=jsapi";
+    public synchronized static final String requestTicket(){
+        WxAccessToken wxtoken = AccessTokenHolder.get();
+        String token = wxtoken.getAccessToken();
+        TokenType mptype =  AccessTokenHolder.MP_TYPE;
+        String url = "";
+        if(mptype.equals(TokenType.MP)){
+           url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+token+"&type=jsapi";
+        }else{
+           url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token="+token;
+        }
         try {
             HttpGet httpGet = new HttpGet(url);
             CloseableHttpClient httpclient = HttpClients.createDefault();

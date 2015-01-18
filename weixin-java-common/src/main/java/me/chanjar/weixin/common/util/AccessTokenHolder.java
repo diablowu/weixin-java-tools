@@ -20,6 +20,8 @@ public class AccessTokenHolder {
     
     private static final WxAccessToken _TOKEN = new WxAccessToken();
     
+    public static TokenType MP_TYPE;
+    
     public static void load(final String token, final int expired){
         _TOKEN.setAccessToken(token);
         _TOKEN.setExpiresIn(expired);
@@ -32,8 +34,9 @@ public class AccessTokenHolder {
     
 
     
-    public synchronized static final String requestToken(String id, String secret,TokenType type){
+    public synchronized static final String requestToken(final String id,final String secret,final TokenType type){
         String url = "";
+        MP_TYPE = type;
         if(type.equals(TokenType.CP)){
             url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?"
                     + "&corpid=" + id
