@@ -107,4 +107,15 @@ public class WxCpXmlMessageTest extends WxAPITestBase {
       
       System.out.println(m.getContent());
   }
+  @Test
+  public void testSubMsg(){
+      String xml =loadFile("x:/1.xml");
+      
+      WxCpXmlMessage m = WxCpXmlMessage.fromXml(xml);
+      Assert.assertNotNull(m);
+      System.out.println(m.getMsgType());
+      System.out.println(m.getEvent());
+      System.out.println(m.getEventKey());
+      
+  }
 }

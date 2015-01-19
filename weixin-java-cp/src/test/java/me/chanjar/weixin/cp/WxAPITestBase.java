@@ -1,5 +1,9 @@
 package me.chanjar.weixin.cp;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
 import me.chanjar.weixin.common.util.AccessTokenHolder;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage;
 import me.chanjar.weixin.common.util.storage.StorageStrategy;
@@ -8,6 +12,7 @@ import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.api.WxCpSpringServiceImpl;
 import me.chanjar.weixin.cp.util.FileSimpleDataStrategy;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 
 public class WxAPITestBase {
@@ -30,6 +35,22 @@ public class WxAPITestBase {
 
         wxCpService = new WxCpSpringServiceImpl();
         wxCpService.setWxCpConfig(config);
+    }
+    
+    
+    protected String loadFile(String path){
+        StringBuilder sb = new StringBuilder();
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            List<String> lines = IOUtils.readLines(fis);
+            fis.close();
+            for (String string : lines) {
+                sb.append(string);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
 }

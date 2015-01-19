@@ -19,13 +19,22 @@ full,exist
 
 <rules>
 	<rule>
-		<msgType>text</msgType>
-		<event><event>
+		<msgType>event</msgType>
+		<event>subscribe<event>
 		<eventKey></eventKey>
-		<content><![CDATA[我要抽奖]]></content>
-		<textMatchMode>full</textMatchMode>
+		<content><![CDATA[*我要抽奖*]]></content>
 		<agentId>1</agentId>
 		<processor>me.chanjar.weixin.cp.massage.TextProcessor</processor>
 	</rule>
+    
+	<rule>
+		<msgType>event</msgType>
+		<event>subscribe<event>
+		<eventKey></eventKey>
+		<content><![CDATA[*我要抽奖*]]></content>
+		<agentId>1</agentId>
+		<processor>me.chanjar.weixin.cp.massage.TextProcessor</processor>
+	</rule>    
+  
 </rules>
 
