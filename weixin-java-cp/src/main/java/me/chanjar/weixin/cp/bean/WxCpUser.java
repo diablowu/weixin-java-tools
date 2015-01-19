@@ -21,6 +21,7 @@ public class WxCpUser {
   private String tel;
   private String email;
   private String weiXinId;
+  private String avatar;
   private final List<Attr> extAttrs = new ArrayList<Attr>();
 
   public String getUserId() {
@@ -138,5 +139,13 @@ public class WxCpUser {
     }
 
   }
+
+public String getAvatar() {
+    return avatar;
+}
+
+public void setAvatar(String avatar) {
+    this.avatar = avatar;
+}
 
 }
