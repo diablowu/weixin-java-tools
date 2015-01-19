@@ -1,11 +1,18 @@
 package me.chanjar.weixin.cp.bean;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.cp.WxAPITestBase;
 
 import org.junit.Assert;
+import org.junit.Test;
 
-public class WxCpXmlMessageTest {
+public class WxCpXmlMessageTest extends WxAPITestBase {
 
+    
+  @Test
   public void testFromXml() {
 
     String xml = "<xml>"
@@ -87,4 +94,17 @@ public class WxCpXmlMessageTest {
     Assert.assertEquals(wxMessage.getSendLocationInfo().getPoiname(), "wo de poi");
   }
   
+  String enXml = "<xml><ToUserName><![CDATA[wx8464f7ea09a20903]]></ToUserName>"
++"<Encrypt><![CDATA[uWIL6hjwzk6EK0goxgBI/6H1VmXgWPtS2cxbi8spLE3KIbO620CxJy1bwSeARy1/LW4gsfLES8PTolwfGMX5uvqfujFfBASFATrUJh1kuhQ29ZYK2Wu5p71riWD6I8e8IBAyPIHFyo1cmY0XEfheH+yNXqInipVqmO5/Jsgz04sEM4ys+3AfLJji3EiWsiZr8P80/DCMr0p4teqp0hHQwv95kCM11RUE7ic/1OyVhibh71ALK5GKbsPpvdHR8FiOyzl2CmIE3BCajCJSl7KzLXdUzudDlYcU+6eMMgU2jVhA5YkPCIWrIzg66+B3LhqqvQZDXfhuzk1RaoCwkHX13e3z9phdsVAmJweOKHyhdGm1vYuLfsnwjUVh4hfHAwxPlQ0GSY8gAmMPmGDtdUvPL8966G1RGqbmGRJzvsGpxIQCPdqUanUit0vgcBI7LXlspi9qQYl7M3El3oqHcgkElA==]]></Encrypt>"
++"<AgentID><![CDATA[1]]></AgentID></xml>";
+  
+  @Test
+  public void testCryptMsg() throws FileNotFoundException, IOException{
+      String timestamp = "1421655193";
+      String nonce = "2001091623";
+      String sign = "59a6f5cb2cc45827053350689149602a4f623593";
+      WxCpXmlMessage m =    WxCpXmlMessage.fromEncryptedXml(enXml, this.config.getAgentConfig("1"), timestamp, nonce, sign);
+      
+      System.out.println(m.getContent());
+  }
 }
