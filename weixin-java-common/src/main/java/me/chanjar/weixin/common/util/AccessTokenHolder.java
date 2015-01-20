@@ -22,10 +22,22 @@ public class AccessTokenHolder {
     
     public static TokenType MP_TYPE;
     
+    @Deprecated
+    /**
+     * @param token
+     * @param expired
+     */
     public static void load(final String token, final int expired){
         _TOKEN.setAccessToken(token);
         _TOKEN.setExpiresIn(expired);
     }
+    
+    
+    public static void load(final String token, final int expired, TokenType tokenType){
+        _TOKEN.setAccessToken(token);
+        _TOKEN.setExpiresIn(expired);
+        MP_TYPE = tokenType;
+    }    
     
     
     public static WxAccessToken get(){

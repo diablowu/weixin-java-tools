@@ -11,6 +11,5 @@ public interface MessageHandlerFactory {
     public void init() throws Exception;
     
     
-    public WxCpMessageProcessor findHandler(final MatchRule rule);
 
 }
