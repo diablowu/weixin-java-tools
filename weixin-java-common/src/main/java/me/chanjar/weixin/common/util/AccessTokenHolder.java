@@ -23,7 +23,7 @@ public class AccessTokenHolder {
     public static TokenType MP_TYPE;
     
     @Deprecated
-    /**
+    /** 使用三个参数版本进行加载
      * @param token
      * @param expired
      */
@@ -33,6 +33,12 @@ public class AccessTokenHolder {
     }
     
     
+    /**
+     * 
+     * @param token
+     * @param expired
+     * @param tokenType
+     */
     public static void load(final String token, final int expired, TokenType tokenType){
         _TOKEN.setAccessToken(token);
         _TOKEN.setExpiresIn(expired);
