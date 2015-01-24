@@ -56,15 +56,18 @@ public class WxCpSpringServiceImpl implements WxCpService {
 
     protected final ThreadLocal<Integer> retryTimes = new ThreadLocal<Integer>();
 
-
-    public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data) {
-        try {
-            String accessToken = AccessTokenHolder.get().getAccessToken();
-            return SHA1.gen(accessToken, timestamp, nonce, data).equals(msgSignature);
-        } catch (Exception e) {
-            return false;
-        }
+    
+    @Override
+    public boolean checkSignature(String agentId, String timestamp, String nonce, String data, String msgSignature) {
+      try {
+          String token = wxCpConfig.getAgentConfig(agentId).getToken();
+          return SHA1.gen(token, timestamp, nonce, data).equals(msgSignature);
+      } catch (Exception e) {
+          return false;
+      }
     }
+    
+
 
     public void userAuthenticated(String userId) throws WxErrorException {
         String url = "https://qyapi.weixin.qq.com/cgi-bin/user/authsucc?userid="+ userId;

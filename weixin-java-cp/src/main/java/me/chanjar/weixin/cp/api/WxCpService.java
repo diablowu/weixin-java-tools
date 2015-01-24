@@ -21,14 +21,14 @@ public interface WxCpService {
    * 验证推送过来的消息的正确性
    * 详情请见: http://mp.weixin.qq.com/wiki/index.php?title=验证消息真实性
    * </pre>
-   *
+   * @param agentId 
    * @param msgSignature
    * @param timestamp
    * @param nonce
    * @param data         微信传输过来的数据，有可能是echoStr，有可能是xml消息
    * @return
    */
-  public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data);
+  public boolean checkSignature(String agentId, String timestamp, String nonce, String data ,String msgSignature);
 
   /**
    * <pre>

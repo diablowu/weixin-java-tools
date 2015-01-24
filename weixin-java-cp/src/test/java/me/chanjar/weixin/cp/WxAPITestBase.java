@@ -22,7 +22,7 @@ public class WxAPITestBase {
 
     @Before
     public void init() {
-        config = new WxCpConfig("c:/config.xml");
+        config = new WxCpConfig("x:/config.xml");
         
         System.out.println(config.toString());
         
