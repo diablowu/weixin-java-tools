@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import me.chanjar.weixin.common.util.AccessTokenHolder;
+import me.chanjar.weixin.common.util.AccessTokenHolder.TokenType;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage;
 import me.chanjar.weixin.common.util.storage.StorageStrategy;
 import me.chanjar.weixin.cp.api.WxCpConfig;
@@ -22,7 +23,7 @@ public class WxAPITestBase {
 
     @Before
     public void init() {
-        config = new WxCpConfig("x:/config.xml");
+        config = new WxCpConfig("mp-config.xml");
         
         System.out.println(config.toString());
         
@@ -30,7 +31,7 @@ public class WxAPITestBase {
         StorageStrategy ss = new FileSimpleDataStrategy(filePath, config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);
         sds.loadData(false);
-        AccessTokenHolder.load(sds.getData(), 7200);
+        AccessTokenHolder.load(sds.getData(), 7200,TokenType.CP);
         
 
         wxCpService = new WxCpSpringServiceImpl();

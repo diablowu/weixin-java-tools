@@ -1,0 +1,21 @@
+<config>
+	<corpId>wx8464f7ea09a20903</corpId>
+	<corpSecret>ONkuLWeenCqSoY05pV9H5_7wnlZuRMYSabRaZkz4MEidk8LqFpVXNq9tBjGUvwBx</corpSecret>
+	<agent>
+		<agentId>1</agentId>
+		<token>wdRHjZeH69h75X</token>
+		<aesKey>2eLYdbJvlWM627RztQqEUiOQUp1lljgFpEvdEeHdjBA</aesKey>
+	</agent>
+	<agent>
+		<agentId>3</agentId>
+		<token>BXrT3rLZ2G</token>
+		<aesKey>Tb28cthKvyzYnplNKCuAd6JHXFg7NZ86EdIuFi15KJo</aesKey>
+	</agent>
+	<agent>
+		<agentId>0</agentId>
+		<token>yKaXd6HAkLnoaV</token>
+		<aesKey>LDyYVRmf9dX2yMdULoleGBo9FeOCUoJzNX7kY2Qxbkm</aesKey>
+	</agent>    
+    
+    
+</config>

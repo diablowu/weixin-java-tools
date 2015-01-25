@@ -1,6 +1,5 @@
 package me.chanjar.weixin.cp.api;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ public class WxCpConfig {
 
     private String corpId;
     private String corpSecret;
+    
 
     @XmlElement(name = "agent",type = AgentConfig.class)
     private List<AgentConfig> agents = new ArrayList<AgentConfig>();
@@ -34,8 +34,8 @@ public class WxCpConfig {
     
     public WxCpConfig(){}
     
-    public WxCpConfig(String path){
-        WxCpConfig _c = load(path);
+    public WxCpConfig(String configFileName){
+        WxCpConfig _c = load(configFileName);
         this.corpId = _c.corpId;
         this.corpSecret = _c.corpSecret;
         this.agents = _c.agents;
@@ -73,14 +73,12 @@ public class WxCpConfig {
     }
     
     
-    private WxCpConfig load(String path){
+    private WxCpConfig load(String configFileName){
         try {
             Unmarshaller um = JAXBContext.newInstance(WxCpConfig.class).createUnmarshaller();
-            FileInputStream fis = new FileInputStream(path);
-            InputSource inputSource = new InputSource(fis);
+            InputSource inputSource = new InputSource(WxCpConfig.class.getResourceAsStream("/"+configFileName));
             inputSource.setEncoding("utf-8");
             WxCpConfig cpconfig = (WxCpConfig) um.unmarshal(inputSource);
-            fis.close();
             for(AgentConfig ac : cpconfig.getAgents()){
                 ac.setCorp(cpconfig);
             }
@@ -88,7 +86,24 @@ public class WxCpConfig {
         } catch (Exception e) {
             throw new RuntimeException("从xml加载配置异常", e);
         }
-    }
+    }    
+    
+//    private WxCpConfig load(String path){
+//        try {
+//            Unmarshaller um = JAXBContext.newInstance(WxCpConfig.class).createUnmarshaller();
+//            FileInputStream fis = new FileInputStream(path);
+//            InputSource inputSource = new InputSource(fis);
+//            inputSource.setEncoding("utf-8");
+//            WxCpConfig cpconfig = (WxCpConfig) um.unmarshal(inputSource);
+//            fis.close();
+//            for(AgentConfig ac : cpconfig.getAgents()){
+//                ac.setCorp(cpconfig);
+//            }
+//            return cpconfig;
+//        } catch (Exception e) {
+//            throw new RuntimeException("从xml加载配置异常", e);
+//        }
+//    }
     
     
     

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import me.chanjar.weixin.common.util.AccessTokenHolder;
+import me.chanjar.weixin.common.util.AccessTokenHolder.TokenType;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage;
 import me.chanjar.weixin.common.util.storage.StorageStrategy;
 import me.chanjar.weixin.cp.api.WxCpConfig;
@@ -24,23 +25,23 @@ public class TestInitServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        WxCpConfig config = new WxCpConfig("/tmp/config.xml");
+        WxCpConfig config = new WxCpConfig("mp-config.xml");
         String filePath = System.getProperty("user.home")+ "/.access_token";
         StorageStrategy ss = new FileSimpleDataStrategy(filePath,config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);
         sds.loadData(true);
-        AccessTokenHolder.load(sds.getData(), 7200);
+        AccessTokenHolder.load(sds.getData(), 7200,TokenType.CP);
         super.doGet(req, resp);
     }
 
     @Override
     public void init(ServletConfig c) throws ServletException {
-        WxCpConfig config = new WxCpConfig("/tmp/config.xml");
+        WxCpConfig config = new WxCpConfig("mp-config.xml");
         String filePath = System.getProperty("user.home")+ "/.access_token";
         StorageStrategy ss = new FileSimpleDataStrategy(filePath,config);
         SimpleDataStorage sds = new SimpleDataStorage(ss);
         sds.loadData(false);
-        AccessTokenHolder.load(sds.getData(), 7200);
+        AccessTokenHolder.load(sds.getData(), 7200,TokenType.CP);
         super.init(c);
     }
 }
