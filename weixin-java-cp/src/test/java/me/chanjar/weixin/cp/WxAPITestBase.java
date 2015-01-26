@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import me.chanjar.weixin.common.util.AccessTokenHolder;
+import me.chanjar.weixin.common.util.JSApiTicketHolder;
 import me.chanjar.weixin.common.util.AccessTokenHolder.TokenType;
 import me.chanjar.weixin.common.util.storage.SimpleDataStorage;
 import me.chanjar.weixin.common.util.storage.StorageStrategy;
@@ -33,6 +34,12 @@ public class WxAPITestBase {
         sds.loadData(false);
         AccessTokenHolder.load(sds.getData(), 7200,TokenType.CP);
         
+        
+        String jsFile = System.getProperty("user.home") + "/.js_ticket";
+        StorageStrategy ssJS = new FileSimpleDataStrategy(jsFile, config);
+        SimpleDataStorage sdsJS = new SimpleDataStorage(ssJS);
+        sdsJS.loadData(false);
+        JSApiTicketHolder.load(sds.getData(), 7200);
 
         wxCpService = new WxCpSpringServiceImpl();
         wxCpService.setWxCpConfig(config);

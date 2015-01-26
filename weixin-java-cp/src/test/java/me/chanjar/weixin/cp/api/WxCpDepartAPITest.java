@@ -11,6 +11,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.util.JSApiTicketHolder;
+import me.chanjar.weixin.common.util.JsApiSdkConfig;
 import me.chanjar.weixin.common.util.crypto.SHA1;
 import me.chanjar.weixin.cp.WxAPITestBase;
 import me.chanjar.weixin.cp.bean.WxCpDepart;
@@ -101,7 +103,17 @@ public class WxCpDepartAPITest extends WxAPITestBase {
       WxCpXmlOutMessage textMsg = WxCpXmlOutMessage.TEXT().content("hello").toUser("wubo").fromUser("adfadf").build();
       String xml = textMsg.toEncryptedXml(this.wxCpService.getWxCpConfig().getAgentConfig("1"));
       System.out.println(xml);
-              
+  }
+  
+  
+  @Test
+  public void testJSAPI() throws NoSuchAlgorithmException{
+      JsApiSdkConfig cfg = new JsApiSdkConfig("http://a.com/adfads.do?adsfas=1&234234=2");
+      Assert.assertNotNull(cfg);
+      System.out.println(cfg.getNonceStr());
+      System.out.println(cfg.getTimestamp());
+      System.out.println(cfg.getSignature());
+      System.out.println(JSApiTicketHolder.get().getTickct());
   }
 
 
