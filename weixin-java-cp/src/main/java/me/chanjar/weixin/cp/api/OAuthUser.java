@@ -1,7 +1,5 @@
 package me.chanjar.weixin.cp.api;
 
-import java.security.NoSuchAlgorithmException;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +20,7 @@ public class OAuthUser {
     private static final int EXPIRED_SECONDS = 21600;//6 hours
     
     
-    public static OAuthUser checkCookie(HttpServletRequest request) throws NoSuchAlgorithmException{
+    public static OAuthUser checkCookie(HttpServletRequest request){
         OAuthUser u = null;
         Cookie[] cks = request.getCookies();
         String userStr = null;
@@ -39,7 +37,7 @@ public class OAuthUser {
             String userId = part[0];
             String deviceId = part[1];
             String ts = part[2];
-            if((Long.valueOf(ts) + EXPIRED_SECONDS) < curr){
+            if((Long.valueOf(ts) + EXPIRED_SECONDS) > curr){
                 u = new OAuthUser();
                 u.setUserId(userId);
                 u.setDeviceId(deviceId);
@@ -49,7 +47,7 @@ public class OAuthUser {
         return u;
     }
     
-    public void setCookie(HttpServletResponse resp) throws NoSuchAlgorithmException{
+    public void setCookie(HttpServletResponse resp){
         String ts = String.valueOf(System.currentTimeMillis()/1000);
         String userStr = this.userId+ "_" + this.deviceId + "_" + ts;
         Cookie cookie = new Cookie(COOKIE_USER_KEY, userStr);

@@ -84,6 +84,7 @@ public class WxCpConfig {
             }
             return cpconfig;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("从xml加载配置异常", e);
         }
     }    
