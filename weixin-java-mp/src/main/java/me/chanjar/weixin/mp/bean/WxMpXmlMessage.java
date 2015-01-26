@@ -1,18 +1,25 @@
 package me.chanjar.weixin.mp.bean;
 
-import me.chanjar.weixin.common.util.xml.AdapterCDATA;
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
-import me.chanjar.weixin.mp.util.xml.XmlTransformer;
-import org.apache.commons.io.IOUtils;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import me.chanjar.weixin.common.util.xml.AdapterCDATA;
+import me.chanjar.weixin.mp.api.WxMpConfig;
+import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
+import me.chanjar.weixin.mp.util.xml.XmlTransformer;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * <pre>
@@ -409,19 +416,19 @@ public class WxMpXmlMessage {
    */
   public static WxMpXmlMessage fromEncryptedXml(
       String encryptedXml,
-      WxMpConfigStorage wxMpConfigStorage,
+      WxMpConfig wxMpConfig,
       String timestamp, String nonce, String msgSignature) {
-    WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfigStorage);
+    WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfig);
     String plainText = cryptUtil.decrypt(msgSignature, timestamp, nonce, encryptedXml);
     return fromXml(plainText);
   }
 
   public static WxMpXmlMessage fromEncryptedXml(
       InputStream is,
-      WxMpConfigStorage wxMpConfigStorage,
+      WxMpConfig wxMpConfig,
       String timestamp, String nonce, String msgSignature) {
     try {
-      return fromEncryptedXml(IOUtils.toString(is, "UTF-8"), wxMpConfigStorage, timestamp, nonce, msgSignature);
+      return fromEncryptedXml(IOUtils.toString(is, "UTF-8"), wxMpConfig, timestamp, nonce, msgSignature);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

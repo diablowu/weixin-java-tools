@@ -74,14 +74,7 @@ public class WxCpSpringServiceImpl implements WxCpService {
         execute(new SimpleGetRequestExecutor(), url, null);
     }
     
-    @Override
-    public void jsApiTicketRefresh() throws WxErrorException {
-        //ignore
-    }
 
-    public void accessTokenRefresh() throws WxErrorException {
-       //ignore
-    }
 
     public void messageSend(WxCpMessage message) throws WxErrorException {
         String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send";
@@ -306,12 +299,10 @@ public class WxCpSpringServiceImpl implements WxCpService {
     }
 
     @Override
-    public String oauth2buildAuthorizationUrl(String state) {
-        String redirectURI = "";
+    public String oauth2buildAuthorizationUrl(String state, String redirectURI) {
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
         url += "appid=" + wxCpConfig.getCorpId();
-        url += "&redirect_uri="
-                + URIUtil.encodeURIComponent(redirectURI);
+        url += "&redirect_uri=" + URIUtil.encodeURIComponent(redirectURI);
         url += "&response_type=code";
         url += "&scope=snsapi_base";
         if (state != null) {
@@ -332,11 +323,9 @@ public class WxCpSpringServiceImpl implements WxCpService {
         try {
             RequestExecutor<String, String> executor = new SimpleGetRequestExecutor();
             String responseText = executor.execute(getHttpclient(), url, null);
-            JsonElement je = Streams.parse(new JsonReader(new StringReader(
-                    responseText)));
+            JsonElement je = Streams.parse(new JsonReader(new StringReader(responseText)));
             JsonObject jo = je.getAsJsonObject();
-            return new String[] { GsonHelper.getString(jo, "UserId"),
-                    GsonHelper.getString(jo, "DeviceId") };
+            return new String[] { GsonHelper.getString(jo, "UserId"),GsonHelper.getString(jo, "DeviceId") };
         } catch (ClientProtocolException e) {
             LOGGER.error("客户端通信异常",e);
             throw new RuntimeException(e);

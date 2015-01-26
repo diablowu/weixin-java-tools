@@ -13,7 +13,8 @@
  */
 package me.chanjar.weixin.mp.util.crypto;
 
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpConfig;
+
 import org.apache.commons.codec.binary.Base64;
 
 public class WxMpCryptUtil extends me.chanjar.weixin.common.util.crypto.WxCryptUtil {
@@ -23,15 +24,15 @@ public class WxMpCryptUtil extends me.chanjar.weixin.common.util.crypto.WxCryptU
    *
    * @param wxMpConfigStorage
    */
-  public WxMpCryptUtil(WxMpConfigStorage wxMpConfigStorage) {
+  public WxMpCryptUtil(WxMpConfig wxMpConfig) {
     /*
      * @param token          公众平台上，开发者设置的token
      * @param encodingAesKey 公众平台上，开发者设置的EncodingAESKey
      * @param appId          公众平台appid
      */
-    String encodingAesKey = wxMpConfigStorage.getAesKey();
-    String token = wxMpConfigStorage.getToken();
-    String appId = wxMpConfigStorage.getAppId();
+    String encodingAesKey = wxMpConfig.getAesKey();
+    String token = wxMpConfig.getToken();
+    String appId = wxMpConfig.getAppId();
 
     this.token = token;
     this.appidOrCorpid = appId;

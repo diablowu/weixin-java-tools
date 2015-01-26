@@ -40,27 +40,8 @@ public interface WxCpService {
    */
   public void userAuthenticated(String userId) throws WxErrorException;
 
-  /**
-   * <pre>
-   * 获取access_token，本方法线程安全
-   * 且在多线程同时刷新时只刷新一次，避免超出2000次/日的调用次数上限
-   * 另：本service的所有方法都会在access_token过期是调用此方法
-   * 程序员在非必要情况下尽量不要主动调用此方法
-   * 详情请见: http://mp.weixin.qq.com/wiki/index.php?title=获取access_token
-   * </pre>
-   *
-   * @throws me.chanjar.weixin.common.exception.WxErrorException
-   */
-  @Deprecated
-  public void accessTokenRefresh() throws WxErrorException;
   
   
-  /**
-   * 刷新jsticket
-   * @throws WxErrorException
-   */
-  @Deprecated
-  public void jsApiTicketRefresh() throws WxErrorException;
 
   /**
    * <pre>
@@ -286,10 +267,10 @@ public interface WxCpService {
    * 构造oauth2授权的url连接
    * 详情请见: http://qydev.weixin.qq.com/wiki/index.php?title=企业获取code
    * </pre>
-   * @param state
-   * @return code
+   * @param state 自定义值，重定向后会把这个值作为state={state}传递到redirectURI上
+   * @return redirectURI 重定向后的URI
    */
-  public String oauth2buildAuthorizationUrl(String state);
+  public String oauth2buildAuthorizationUrl(String state, String redirectURI);
 
   /**
    * <pre>

@@ -29,27 +29,8 @@ public interface WxMpService {
    */
   public boolean checkSignature(String timestamp, String nonce, String signature);
   
-  /**
-   * <pre>
-   * 获取access_token，本方法线程安全
-   * 且在多线程同时刷新时只刷新一次，避免超出2000次/日的调用次数上限
-   * 
-   * 另：本service的所有方法都会在access_token过期是调用此方法
-   * 
-   * 程序员在非必要情况下尽量不要主动调用此方法
-
-   * 详情请见: http://mp.weixin.qq.com/wiki/index.php?title=获取access_token
-   * </pre>
-   * @throws me.chanjar.weixin.common.exception.WxErrorException
-   */
-  public void accessTokenRefresh() throws WxErrorException;
   
   
-  /**
-   * https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi
-   * @throws WxErrorException
-   */
-  public void jsApiTicketRefresh() throws WxErrorException;
   
   /**
    * <pre>
@@ -346,7 +327,7 @@ public interface WxMpService {
    * @param state
    * @return code
    */
-  public String oauth2buildAuthorizationUrl(String scope, String state);
+  public String oauth2buildAuthorizationUrl(String scope, String state, String redirectURI);
 
   /**
    * <pre>
@@ -419,9 +400,8 @@ public interface WxMpService {
    */
   public <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data) throws WxErrorException;
 
-    /**
-     * 注入 {@link WxMpConfigStorage} 的实现
-     * @param wxConfigProvider
-     */
-  public void setWxMpConfigStorage(WxMpConfigStorage wxConfigProvider);
+  
+  public void setWxMpConfig(WxMpConfig wxMpConfig);
+  
+  public WxMpConfig getWxMpConfig();
 }

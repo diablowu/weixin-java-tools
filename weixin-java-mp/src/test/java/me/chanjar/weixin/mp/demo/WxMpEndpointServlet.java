@@ -1,34 +1,29 @@
 package me.chanjar.weixin.mp.demo;
 
-import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
-import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.common.util.StringUtils;
-import me.chanjar.weixin.mp.api.*;
-import me.chanjar.weixin.mp.bean.WxMpMpXmlOutImageMessage;
-import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
-import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
-import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+
+import me.chanjar.weixin.common.util.StringUtils;
+import me.chanjar.weixin.mp.api.WxMpConfig;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 
 /**
  * @author Daniel Qian
  */
 public class WxMpEndpointServlet extends HttpServlet {
 
-  protected WxMpConfigStorage wxMpConfigStorage;
+  protected WxMpConfig wxMpConfigStorage;
   protected WxMpService wxMpService;
   protected WxMpMessageRouter wxMpMessageRouter;
 
-  public WxMpEndpointServlet(WxMpConfigStorage wxMpConfigStorage, WxMpService wxMpService,
+  public WxMpEndpointServlet(WxMpConfig wxMpConfigStorage, WxMpService wxMpService,
       WxMpMessageRouter wxMpMessageRouter) {
     this.wxMpConfigStorage = wxMpConfigStorage;
     this.wxMpService = wxMpService;
