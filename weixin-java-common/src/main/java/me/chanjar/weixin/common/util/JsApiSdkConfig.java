@@ -3,6 +3,8 @@ package me.chanjar.weixin.common.util;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import me.chanjar.weixin.common.util.crypto.SHA1;
 
 
@@ -17,6 +19,20 @@ public class JsApiSdkConfig {
     private String timestamp;
     private String signature;
     
+    
+    public JsApiSdkConfig(final HttpServletRequest req) throws NoSuchAlgorithmException{
+        this(getFullURL(req));
+    }
+    
+    
+    private static String getFullURL(final HttpServletRequest req){
+        String _u = req.getRequestURL().toString();
+        String queryStrig = req.getQueryString();
+        if(!StringUtils.isEmpty(queryStrig)){
+            _u = _u + "?" +queryStrig;
+        }
+        return _u;
+    }
     
     public JsApiSdkConfig(String url) throws NoSuchAlgorithmException{
         this.url = url;
