@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 	<name>WeiXin Java Tools :: Parent</name>
 
-
 	<modules>
 		<module>weixin-java-common</module>
 		<module>weixin-java-cp</module>
